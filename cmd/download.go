@@ -16,10 +16,11 @@ import (
 )
 
 type DownloadOpts struct {
-	outputDir string
-	dump      bool
-	batch     bool
-	wiki      bool
+	outputDir  string
+	outputFile string
+	dump       bool
+	batch      bool
+	wiki       bool
 }
 
 var dlOpts = DownloadOpts{}
@@ -105,6 +106,9 @@ func downloadDocument(ctx context.Context, client *core.Client, url string, opts
 	mdName := fmt.Sprintf("%s.md", docToken)
 	if dlConfig.Output.TitleAsFilename {
 		mdName = fmt.Sprintf("%s.md", utils.SanitizeFileName(title))
+	}
+	if opts.outputFile != "" {
+		mdName = fmt.Sprintf("%s.md", opts.outputFile)
 	}
 	outputPath := filepath.Join(opts.outputDir, mdName)
 	if err = os.WriteFile(outputPath, []byte(result), 0o644); err != nil {
